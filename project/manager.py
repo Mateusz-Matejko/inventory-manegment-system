@@ -12,9 +12,53 @@ class Manager:
         self.history = []
         self.stock = {}
         self.actions = {}
+        self.file_name = None
 
-    def company_now(self, func):
-        func()
+    def get_history(self, file_name):
+        with open(file_name, "r") as file:
+            for line in file:
+                line = line.strip()
+                if line == "saldo":
+                    change = int(file.readline().strip())
+                    comment = file.readline().strip()
+                    print(self.account)
+                    if self.account + change < 0:
+                        raise ValueError(f"Ballace can't be bellow 0")
+                    self.account += change
+                    self.history.append([line, change, comment])
+                elif line == "zakup":
+                    product_id, buy_price, buy_qty, full_amount = sell_buy_operation(file)
+                    if full_amount > self.account:
+                        raise ValueError(f"After transaction {line} balance would be lower than 0")
+                    if product_id not in self.stock:
+                        self.stock[product_id] = buy_qty
+                    else:
+                        self.stock[product_id] += buy_qty
+                    self.account -= full_amount
+                    self.history.append([line, product_id, str(buy_price), str(buy_qty)])
+                elif line == "sprzedaz":
+                    product_id, sell_price, sell_qty, full_amount = sell_buy_operation(file)
+                    if product_id not in self.stock:
+                        raise KeyError(f"You dont have \"{product_id}\" in stock, perhaps you ment other product.")
+                    if self.stock[product_id] < sell_qty:
+                        raise ValueError(
+                            f"Not enough {product_id} in stock. Needed:{sell_qty}, got:{man_obj.stock[product_id]}.")
+                    self.stock[product_id] -= sell_qty
+                    self.account += full_amount
+                    self.history.append([line, product_id, str(buy_price), str(buy_qty)])
+                elif line == "stop":
+                    break
+
+    def write_history(self, file):
+        with open(file, "w") as file:
+            for transaction in self.history:
+                for details in transaction:
+                    try:
+                        details = details.strip()
+                    except AttributeError:
+                        pass
+                    file.write(str(details) + "\n")
+            file.write("stop")
 
     def assign(self, action):
         def wrapper(func):
@@ -59,42 +103,12 @@ def sell(manager, product_id, sell_price, sell_qty):
     man_obj.history.append(["sprzedaz", product_id, str(sell_price), str(sell_qty)])
 
 
-def write_history(history, file):
-    with open(file, "w") as file:
-        for transaction in history:
-            for details in transaction:
-                details = details.strip()
-                file.write(details + "\n")
-        file.write("stop")
-
-
 def sell_buy_operation(file):
     product_id = file.readline().rstrip()
     price = int(file.readline().rstrip())
     qty = int(file.readline().rstrip())
-    return product_id, price, qty
-
-
-@man_obj.company_now
-def get_current_company():
-    with open("history.txt") as file:
-        for line in file:
-            line = line.strip()
-            if line == "saldo":
-                change = int(file.readline().strip())
-                comment = file.readline().strip()
-                # man_obj.history.append([line, str(change), comment])
-                man_obj.execute(action=line, change=change, comment=comment)
-            elif line == "zakup":
-                product_id, buy_price, buy_qty = sell_buy_operation(file)
-                # man_obj.history.append([line, product_id, str(buy_price), str(buy_qty)])
-                man_obj.execute(action=line, product_id=product_id, buy_price=buy_price, buy_qty=buy_qty)
-            elif line == "sprzedaz":
-                product_id, sell_price, sell_qty = sell_buy_operation(file)
-                # man_obj.history.append([line, product_id, str(sell_price), str(sell_qty)])
-                man_obj.execute(action=line, product_id=product_id, sell_price=sell_price, sell_qty=sell_qty)
-            elif line == "stop":
-                break
+    transaction_amount = price*qty
+    return product_id, price, qty, transaction_amount
 
 
 if __name__ == '__main__':
