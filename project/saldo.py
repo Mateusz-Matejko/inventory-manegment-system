@@ -1,6 +1,5 @@
 import sys
 from manager import man_obj
-from manager import write_history
 
 
 def main():
@@ -10,8 +9,9 @@ def main():
     file = sys.argv[1]
     change = int(sys.argv[2])
     comment = sys.argv[3]
+    man_obj.get_history(file)
     man_obj.execute(action=action, change=change, comment=comment)
-    write_history(man_obj.history, file=file)
+    man_obj.write_history(file=file)
     print("Balance successfully changed. Current balance:")
     print(man_obj.account)
 
