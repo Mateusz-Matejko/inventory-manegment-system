@@ -41,8 +41,7 @@ class Manager:
                     if product_id not in self.stock:
                         raise KeyError(f"You dont have \"{product_id}\" in stock, perhaps you ment other product.")
                     if self.stock[product_id] < sell_qty:
-                        raise ValueError(
-                            f"Not enough {product_id} in stock. Needed:{sell_qty}, got:{man_obj.stock[product_id]}.")
+                        raise KeyError(f"Not enough {product_id} in stock. Needed:{sell_qty}, got:{man_obj.stock[product_id]}.")
                     self.stock[product_id] -= sell_qty
                     self.account += full_amount
                     self.history.append([line, product_id, str(buy_price), str(buy_qty)])

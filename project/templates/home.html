@@ -1,0 +1,43 @@
+{% extends "layout.html" %}
+
+{% block body %}
+
+        <h2>Hello, welcome to accountant project</h2>
+        What action are you interested in?
+        <br>
+        <br>
+        Saldo
+        <form action="/check/" method="post">
+        <input autocomplete="off" autofocus name="change" required placeholder="value" type="text">
+        <input autocomplete="off" name="comment" required placeholder="comment" type="text">
+        <input type="submit" value="zmien saldo">
+        </form>
+        <br>
+        Zakup
+        <form action="/check/" method="post">
+        <input autocomplete="off" autofocus name="productid" required placeholder="product id" type="text">
+        <input autocomplete="off" name="buy_price" required placeholder="price" type="text">
+        <input autocomplete="off" name="buy_qty" required placeholder="amount" type="number">
+        <input type="submit" value="kup">
+        </form>
+        <br>
+        Sprzedaz
+        <form action="/check/" method="post">
+        <input autocomplete="off" autofocus name="productid" required placeholder="product id" type="text">
+        <input autocomplete="off" name="sell_price" required placeholder="price" type="text">
+        <input autocomplete="off" name="sell_qty" required placeholder="amount" type="number">
+        <input type="submit", value="sprzedaj">
+        </form>
+        <br>
+        <h3>Current balance:{{ balance }}</h3>
+        <h3>
+        Current stock:
+        <br>
+        {% for item in stock %}
+        {{ item }} : {{ stock[item] }}pcs
+        <br>
+        {% endfor %}
+        </h3>
+
+
+{% endblock %}
