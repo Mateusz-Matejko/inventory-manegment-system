@@ -2,7 +2,9 @@ import sys
 
 
 def main():
+    man_obj.get_history("history.txt")
     print(man_obj.history)
+
 
 
 # defining manager class
@@ -21,7 +23,7 @@ class Manager:
                 if line == "saldo":
                     change = int(file.readline().strip())
                     comment = file.readline().strip()
-                    print(self.account)
+                    print(f"Account: {self.account}")
                     if self.account + change < 0:
                         raise ValueError(f"Ballace can't be bellow 0")
                     self.account += change
@@ -52,11 +54,13 @@ class Manager:
         with open(file, "w") as file:
             for transaction in self.history:
                 for details in transaction:
+                    details = str(details)
                     try:
                         details = details.strip()
                     except AttributeError:
                         pass
-                    file.write(str(details) + "\n")
+                    file.write(str(details))
+                    file.write("\n")
             file.write("stop")
 
     def assign(self, action):

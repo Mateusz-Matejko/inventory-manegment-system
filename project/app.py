@@ -1,72 +1,69 @@
-from flask import Flask, render_template, request
-from konto import main as ballance_konto
-from magazyn import main as stock_magazyn
+from flask import Flask, render_template, request, redirect
+from konto import main as konto_main
+from magazyn import main as magazyn_main
+from saldo import main as saldo_main
+from zakup import main as zakup_main
+from sprzedaz import main as sprzedaz_main
+
 app = Flask(__name__)
+
+stock = magazyn_main("history.txt")
+account = konto_main("history.txt")
+file = "history.txt"
 
 
 @app.route("/")
 def home():
-    stock = stock_magazyn("history.txt")
-    balance = ballance_konto("history.txt")
-    return render_template("home.html", balance=balance, stock=stock)
+    return render_template("home.html", account=account, stock=stock)
 
 
-@app.route("/action")
-def action():
-    # validate action
-    action = request.args.get("action")
-    if action == "sprzedaz":
-        return render_template("sprzedaz.html")
-    elif action == "zakup":
-        return render_template("zakup.html")
-    elif action == "saldo":
-        return render_template("saldo.html")
-    else:
-        render_template("Error.html")
-
-@app.route("/check")
-def ballance_status():
-    if str(request.form.get("change")).isalpha() or str(request.form.get("comment")).isnumeric():
-        return None
-    action = "saldo"
-    change = request.form.get("change")
-    comment = request.form.get("comment")
-    return render_template("success.html")
-
-
-def buy_status():
-    if str(request.form.get("buy_price")).isalpha() or str(request.form.get("buy_qty")).isalpha()\
-            or str(request.form.get("id")).isnumeric():
-        return None
-    action = "zakup"
-    id = request.form.get("id")
-    price = request.form.get("buy_price")
-    amount = request.form.get("buy_qty")
-    return render_template("success.html")
-
-
-def sell_status():
-    if str(request.form.get("sell_price")).isalpha() or str(request.form.get("sell_qty")).isalpha()\
-            or str(request.form.get("id")).isnumeric():
-        return None
-    action = "sprzedaz"
-    id = request.form.get("id")
-    price = request.form.get("sell_price")
-    amount = request.form.get("sell_qty")
-    return render_template("success.html")
+@app.route("/action", methods=["GET", "POST"])
+def check():
+    if request.form.get("method") == "saldo":
+        action = request.form.get("method")
+        change = request.form.get("change")
+        change = int(change)
+        comment = request.form.get("comment")
+        result = saldo_main(action=action, change=change, comment=comment, file=file)
+        if result:
+            return render_template("error.html", msg=result)
+        saldo_main(action=action, change=change, comment=comment, file=file)
+        return redirect("/")
+    elif request.form.get("method") == "zakup":
+        action = request.form.get("method")
+        product_id = request.form.get("product_id")
+        buy_price = request.form.get("buy_price")
+        buy_qty = request.form.get("buy_qty")
+        buy_price, buy_qty = int(buy_price), int(buy_qty)
+        result = zakup_main(action=action, product_id=product_id, buy_price=buy_price, buy_qty=buy_qty, file=file)
+        if result:
+            return render_template("error.html", msg=result)
+        zakup_main(action=action, product_id=product_id, buy_price=buy_price, buy_qty=buy_qty, file=file)
+        return redirect("/")
+    elif request.form.get("method") == "sprzedaz":
+        action = request.form.get("method")
+        product_id = request.form.get("product_id")
+        sell_price = request.form.get("buy_price")
+        sell_qty = request.form.get("buy_qty")
+        sell_price, sell_qty = int(sell_price), int(sell_qty)
+        result = sprzedaz_main(action=action, product_id=product_id, sell_price=sell_price, sell_qty=sell_qty, file=file)
+        if result:
+            return render_template("error.html", msg=result)
+        sprzedaz_main(action=action, product_id=product_id, sell_price=sell_price, sell_qty=sell_qty, file=file)
+        return redirect("/")
+    return render_template("error.html", msg="check function error")
 
 
-@app.route("/status/", methods=["POST", "GET"])
-def status():
-    r = ballance_status()
-    print(r)
-    if not r:
-        r = buy_status()
-        if not r:
-            r = sell_status()
-            if not r:
-                return render_template("error.html")
-    return render_template("success.html")
+# @app.route("/status/", methods=["POST", "GET"])
+# def status():
+#     r = ba()
+#     if not r:
+#         r = buy_status()
+#         if not r:
+#             r = sell_status()
+#             if not r:
+#                 return render_template("error.html")
+#     return render_template("success.html")
 
 
 

@@ -16,8 +16,4 @@ zakup
 raspberry
 150
 10
-zakup
-gpc
-1
-60
 stop
