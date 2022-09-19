@@ -1,0 +1,13 @@
+{% extends "layout.html" %}
+
+{% block body %}
+
+<h1>History of transactions</h1>
+{% for action in history %}
+{% for line in action %}
+<div> {{ line }} </div>
+{% endfor %}
+{% endfor %}
+
+
+{% endblock %}
