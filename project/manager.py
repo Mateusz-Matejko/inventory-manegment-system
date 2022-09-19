@@ -3,11 +3,10 @@ import sys
 
 def main():
     man_obj.get_history("history.txt")
-    print(man_obj.history)
-
-
 
 # defining manager class
+
+
 class Manager:
     def __init__(self):
         self.account = 0
@@ -17,21 +16,19 @@ class Manager:
         self.file_name = None
 
     def get_history(self, file_name):
+        self.history = []
+        self.account = 0
+        self.stock = {}
         with open(file_name, "r") as file:
             for line in file:
                 line = line.strip()
                 if line == "saldo":
                     change = int(file.readline().strip())
                     comment = file.readline().strip()
-                    print(f"Account: {self.account}")
-                    if self.account + change < 0:
-                        raise ValueError(f"Ballace can't be bellow 0")
                     self.account += change
                     self.history.append([line, change, comment])
                 elif line == "zakup":
                     product_id, buy_price, buy_qty, full_amount = sell_buy_operation(file)
-                    if full_amount > self.account:
-                        raise ValueError(f"After transaction {line} balance would be lower than 0")
                     if product_id not in self.stock:
                         self.stock[product_id] = buy_qty
                     else:
@@ -40,10 +37,6 @@ class Manager:
                     self.history.append([line, product_id, str(buy_price), str(buy_qty)])
                 elif line == "sprzedaz":
                     product_id, sell_price, sell_qty, full_amount = sell_buy_operation(file)
-                    if product_id not in self.stock:
-                        raise KeyError(f"You dont have \"{product_id}\" in stock, perhaps you ment other product.")
-                    if self.stock[product_id] < sell_qty:
-                        raise KeyError(f"Not enough {product_id} in stock. Needed:{sell_qty}, got:{man_obj.stock[product_id]}.")
                     self.stock[product_id] -= sell_qty
                     self.account += full_amount
                     self.history.append([line, product_id, str(buy_price), str(buy_qty)])
