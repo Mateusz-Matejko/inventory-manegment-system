@@ -51,10 +51,27 @@ def check():
     return render_template("error.html", msg="check function error")
 
 
-@app.route("/history")
+def get_history(history, start=None, finish=None):
+    history_list = []
+    for action in history:
+        for details in action:
+            history_list.append(details)
+    history_list.append("stop")
+    if not start or not finish:
+        return history_list
+    final_list = history_list[start:finish]
+    return final_list
+
+
+@app.route("/history/<start>/<finish>")
+def history_start_finish(start=0, finish=0):
+    start, finish = int(start), int(finish)
+    if start and finish:
+        history_list_index = get_history(przeglad_main(file), start=start, finish=finish)
+        return render_template("history.html", history=history_list_index)
+
+
+@app.route("/history/")
 def history():
-    return render_template("history.html", history=przeglad_main(file))
-
-
-
+    return render_template("history.html", history=get_history(przeglad_main(file)))
 
