@@ -1,8 +1,8 @@
 saldo
-1000000
+100000
 wpłata początkowa
 saldo
--140000
+-14000
 zus
 zakup
 raspberry
@@ -10,7 +10,7 @@ raspberry
 5
 sprzedaz
 raspberry
-25000
+15000
 5
 zakup
 raspberry
