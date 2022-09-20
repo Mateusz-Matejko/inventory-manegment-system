@@ -7,7 +7,6 @@ def main(file):
     #     raise KeyError("2 arguments should be passed <file_name> <file_history>")
     man_obj.get_history(file)
     man_obj.write_history(file)
-    print(man_obj.history)
     return man_obj.history
 
 
