@@ -4,6 +4,7 @@ import sys
 def main():
     man_obj.get_history("history.txt")
 
+
 # defining manager class
 
 
@@ -70,6 +71,8 @@ man_obj = Manager()
 
 @man_obj.assign("saldo")
 def saldo(manager, change, comment):
+    if manager.account + change < 0:
+        raise ValueError(f"Balance can't fall under 0")
     manager.account += change
     man_obj.history.append(["saldo", str(change), comment])
 
@@ -91,7 +94,7 @@ def buy(manager, product_id, buy_price, buy_qty):
 def sell(manager, product_id, sell_price, sell_qty):
     transaction_amount = sell_price * sell_qty
     if product_id not in manager.stock:
-        raise KeyError(f"You dont have \"{product_id}\" in stock, perhaps you ment other product.")
+        raise ValueError(f"You dont have \"{product_id}\" in stock, perhaps you ment other product.")
     if manager.stock[product_id] < sell_qty:
         raise ValueError(f"Not enough {product_id} in stock. Needed:{sell_qty}, got:{man_obj.stock[product_id]}.")
     manager.stock[product_id] -= sell_qty
