@@ -2,7 +2,7 @@
 
 {% block body %}
 
-        {{ msg }}
+        <h5>Last transaction: {{ msg }}</h5>
 
         <h2>Hello, welcome to accountant project</h2>
         What action are you interested in?
@@ -10,28 +10,28 @@
         <br>
         Saldo
         <form action="/action" method="post">
-        <input type="hidden" name="method" value="saldo">
-        <input autocomplete="off" autofocus name="change" required placeholder="value" type="text">
-        <input autocomplete="off" name="comment" required placeholder="comment" type="text">
-        <input type="submit" value="zmien saldo">
+                <input type="hidden" name="method" value="saldo">
+                <input autocomplete="off" name="change" required placeholder="value" type="text">
+                <input autocomplete="off" name="comment" required placeholder="comment" type="text">
+                <input type="submit" value="zmien saldo">
         </form>
         <br>
         Zakup
         <form action="/action" method="post">
-        <input type="hidden" name="method" value="zakup">
-        <input autocomplete="off" autofocus name="product_id" required placeholder="product id" type="text">
-        <input autocomplete="off" name="buy_price" required placeholder="price" type="text">
-        <input autocomplete="off" name="buy_qty" required placeholder="amount" type="number">
-        <input type="submit" value="kup">
+                <input type="hidden" name="method" value="zakup">
+                <input autocomplete="off" name="product_id" required placeholder="product id" type="text">
+                <input autocomplete="off" name="buy_price" required placeholder="price" type="text">
+                <input autocomplete="off" name="buy_qty" required placeholder="amount" type="number">
+                <input type="submit" value="kup">
         </form>
         <br>
         Sprzedaz
         <form action="/action" method="post">
-        <input type="hidden" name="method" value="sprzedaz">
-        <input autocomplete="off" autofocus name="product_id" required placeholder="product id" type="text">
-        <input autocomplete="off" name="sell_price" required placeholder="price" type="text">
-        <input autocomplete="off" name="sell_qty" required placeholder="amount" type="number">
-        <input type="submit", value="sprzedaj">
+                <input type="hidden" name="method" value="sprzedaz">
+                <input autocomplete="off" name="product_id" required placeholder="product id" type="text">
+                <input autocomplete="off" name="sell_price" required placeholder="price" type="text">
+                <input autocomplete="off" name="sell_qty" required placeholder="amount" type="number">
+                <input type="submit", value="sprzedaj">
         </form>
         <br>
         <h3>Current balance:{{ account }}</h3>
