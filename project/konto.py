@@ -2,8 +2,9 @@ import sys
 from manager import man_obj
 
 
-def main(file_name):
-    man_obj.get_history(file_name)
+def main():
+    man_obj.get_history()
+    man_obj.get_current_company()
     return man_obj.account
 
 
