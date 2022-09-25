@@ -12,7 +12,7 @@ from manager import man_obj
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///accountant.db"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-db = SQLAlchemy(app)
+db = SQLAlchemy(app
 alembic = Alembic()
 alembic.init_app(app)
 
