@@ -5,16 +5,12 @@ from saldo import main as saldo_main
 from zakup import main as zakup_main
 from sprzedaz import main as sprzedaz_main
 from przeglad import main as przeglad_main
-from flask_sqlalchemy import SQLAlchemy
-from flask_alembic import Alembic
-from manager import man_obj
+from base import initials
+from base import app
 
-app = Flask(__name__)
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///accountant.db"
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-db = SQLAlchemy(app
-alembic = Alembic()
-alembic.init_app(app)
+
+db = initials()
+
 
 class HistoryOfOperations(db.Model):
     id = db.Column(db.Integer, primary_key=True)

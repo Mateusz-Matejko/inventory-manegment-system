@@ -1,15 +1,5 @@
-import sys
-from flask import Flask, render_template, redirect
-from flask_sqlalchemy import SQLAlchemy
-from flask_alembic import Alembic
-
-app = Flask(__name__)
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///accountant.db"
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-db = SQLAlchemy(app)
-
-alembic = Alembic()
-alembic.init_app(app)
+from base import initials
+db = initials()
 
 
 # class handling database
@@ -22,6 +12,9 @@ class HistoryOfOperations(db.Model):
 
     def __str__(self):
         return self.action
+
+
+db.create_all()
 
 
 def main():

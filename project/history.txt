@@ -1,19 +1,7 @@
-saldo
-10000
-wpłata początkowa
-saldo
--1400
-zus
-zakup
-raspberry
-15000
-5
-sprzedaz
-raspberry
-15000
-5
-zakup
-raspberry
-150
-10
-stop
+saldo,10000,wpłata początkowa
+saldo,-1400,zus
+zakup,raspberry,15000,5
+sprzedaz,raspberry,15000, 5
+zakup,raspberry,150,10
+zakup,f,1,1
+zakup,f,1,1
