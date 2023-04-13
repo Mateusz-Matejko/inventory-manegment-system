@@ -1,10 +1,10 @@
 from flask import Flask, render_template, request, redirect
-from konto import main as konto_main
-from magazyn import main as magazyn_main
-from saldo import main as saldo_main
-from zakup import main as zakup_main
-from sprzedaz import main as sprzedaz_main
-from przeglad import main as przeglad_main
+from account import main as account_main
+from stock import main as stock_main
+from balance import main as balance_main
+from buy import main as buy_main
+from sell import main as sell_main
+from overview import main as overview_main
 from base import initials
 from base import app
 
@@ -25,7 +25,7 @@ class HistoryOfOperations(db.Model):
 
 # function that speeds up the functionality of returning to homepage with information :)
 def return_render_template_home(msg):
-    return render_template("home.html", account=konto_main(), stock=magazyn_main(), msg=msg)
+    return render_template("home.html", account=account_main(), stock=stock_main(), msg=msg)
 
 
 # checking if coma is in any of values passed
@@ -58,7 +58,7 @@ def check():
             return return_render_template_home(msg="Error: wrong value passed or \",\"(coma) used.")
         # predict ValueError passed from manager function.
         try:
-            saldo_main(action=action, change=change, comment=comment)
+            balance_main(action=action, change=change, comment=comment)
         except ValueError as error:
             return return_render_template_home(msg=f"Error: {error}")
         return return_render_template_home(msg=f"Balance successfully changed by: {change}")
@@ -77,7 +77,7 @@ def check():
             return return_render_template_home(msg="Error: wrong value passed or \",\"(coma) used.")
         # predict ValueError passed from manager function.
         try:
-            zakup_main(action=action, product_id=product_id, buy_price=buy_price, buy_qty=buy_qty)
+            buy_main(action=action, product_id=product_id, buy_price=buy_price, buy_qty=buy_qty)
         except ValueError as error:
             return return_render_template_home(msg=f"Error: {error}")
         return return_render_template_home(msg=f"{buy_qty}pcs of \"{product_id}\" bought successfully")
@@ -96,7 +96,7 @@ def check():
             return return_render_template_home(msg="Error: wrong value passed or \",\"(coma) used.")
         # predict ValueError passed from manager function.
         try:
-            sprzedaz_main(action=action, product_id=product_id, sell_price=sell_price, sell_qty=sell_qty)
+            sell_main(action=action, product_id=product_id, sell_price=sell_price, sell_qty=sell_qty)
         except ValueError as error:
             return return_render_template_home(msg=f"Error: {error}")
         return return_render_template_home(msg=f"{sell_qty}pcs of \"{product_id}\" sold successfully")
@@ -120,7 +120,7 @@ def history_start_finish(start=None, finish=None):
     if int(start) < 0 or int(finish) < 0:
         return render_template("error.html", msg="negative argument passed")
     if start and finish:
-        history_list_index = get_history(przeglad_main(), start=start, finish=finish)
+        history_list_index = get_history(overview_main(), start=start, finish=finish)
         return render_template("history.html", history=history_list_index)
     # unexpected nothing happened return error.html
     return render_template("error.html", msg="wrong arguments")
@@ -129,5 +129,5 @@ def history_start_finish(start=None, finish=None):
 # route witch returns whole history
 @app.route("/history/")
 def history():
-    return render_template("history.html", history=get_history(przeglad_main()))
+    return render_template("history.html", history=get_history(overview_main()))
 
